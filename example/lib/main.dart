@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
       var platformVersion;
       // Platform messages may fail, so we use a try/catch PlatformException.
       try {
-        platformVersion = await MultiFilePicker.select;
+        platformVersion = await MultiFilePicker.select();
       } on PlatformException {
         platformVersion = 'Failed to get platform version.';
       }

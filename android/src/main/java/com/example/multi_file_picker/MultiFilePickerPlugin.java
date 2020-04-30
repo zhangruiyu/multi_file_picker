@@ -1,12 +1,14 @@
 package com.example.multi_file_picker;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +28,22 @@ import me.rosuh.filepicker.config.FilePickerManager;
  * MultiFilePickerPlugin
  */
 public class MultiFilePickerPlugin implements FlutterPlugin, MethodCallHandler, PluginRegistry.ActivityResultListener, ActivityAware {
-    private Activity mActivity;
     private MethodChannel.Result methodResult;
-    private MethodChannel channel;
 
+    private MethodChannel mMethodChannel;
+    private Application mApplication;
+    private WeakReference<Activity> mActivity;
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "multi_file_picker");
-        channel.setMethodCallHandler(this);
+        mMethodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "multi_file_picker");
+        mApplication = (Application) flutterPluginBinding.getApplicationContext();
+        mMethodChannel.setMethodCallHandler(this);
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        mMethodChannel.setMethodCallHandler(null);
+        mMethodChannel = null;
     }
 
 
@@ -62,19 +72,13 @@ public class MultiFilePickerPlugin implements FlutterPlugin, MethodCallHandler, 
                 }
             };
             FilePickerManager.INSTANCE
-                    .from(mActivity).filter(aFilter)
+                    .from(mActivity.get()).filter(aFilter)
                     .forResult(FilePickerManager.REQUEST_CODE);
         } else {
             result.notImplemented();
         }
     }
 
-    @Override
-    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
-        channel = null;
-        methodResult = null;
-    }
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -84,11 +88,13 @@ public class MultiFilePickerPlugin implements FlutterPlugin, MethodCallHandler, 
                 // do your work
                 if (methodResult != null) {
                     methodResult.success(list);
+                    methodResult = null;
                 }
 
             } else {
                 if (methodResult != null) {
                     methodResult.success(new ArrayList());
+                    methodResult = null;
                 }
             }
             return true;
@@ -99,7 +105,7 @@ public class MultiFilePickerPlugin implements FlutterPlugin, MethodCallHandler, 
 
     @Override
     public void onAttachedToActivity(ActivityPluginBinding activityBinding) {
-        mActivity = activityBinding.getActivity();
+        mActivity = new WeakReference<>(activityBinding.getActivity());
         activityBinding.addActivityResultListener(this);
     }
 
