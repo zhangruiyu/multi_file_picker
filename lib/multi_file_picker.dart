@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 
 class MultiFilePicker {
   static const MethodChannel _channel =
-  const MethodChannel('multi_file_picker');
+      const MethodChannel('multi_file_picker');
 
-  static Future<List<String>> select({List<String> type}) async {
+  static Future<List<String>?> select({List<String>? type}) async {
     if (Platform.isAndroid)
-      return _channel.invokeListMethod<String>(
-          'select', {'type': type ?? ["aac", "mp3", "wav", "m4a", "flac"]});
+      return _channel.invokeListMethod<String>('select', {
+        'type': type ?? ["aac", "mp3", "wav", "m4a", "flac"]
+      });
     else
       return [];
   }

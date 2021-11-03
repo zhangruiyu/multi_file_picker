@@ -3,7 +3,7 @@ description: Demonstrates how to use the multi_file_picker plugin.
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  permission_handler: ^5.0.0+hotfix.3
+  permission_handler: ^8.2.5
   multi_file_picker:
     path: ../
 
