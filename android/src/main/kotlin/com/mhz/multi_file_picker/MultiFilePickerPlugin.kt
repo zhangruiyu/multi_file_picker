@@ -68,7 +68,7 @@ class MultiFilePickerPlugin : FlutterPlugin, MethodCallHandler, ActivityResultLi
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Boolean {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 val list: List<String> = obtainData()
