@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     //检测摄像头,存储
+    Permission.mediaLibrary;
     var isAgree = (await [
       Permission.storage,
     ].request())
