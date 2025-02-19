@@ -5,7 +5,7 @@ import com.mhz.multi_file_picker.R
 
 class CustomAudioFileType(private val type: List<String>) : FileType {
     override val fileIconResId: Int
-        get() = R.drawable.ic_music_file_picker
+        get() = me.rosuh.filepicker.R.drawable.ic_music_file_picker
     override val fileType: String
         get() = "Audio"
 
